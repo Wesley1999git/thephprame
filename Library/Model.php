@@ -134,4 +134,68 @@ class Model{
         $dbHelper->updateRecord([$classOptions['id']]);
         return true;
     }
+
+    /**
+     * @param $instance
+     * @param $id
+     * @param string $foreignKey
+     * @param string $specific
+     * @return object|null
+     * @throws \Exception
+     */
+    protected function hasOne($instance,$id,$foreignKey="id",$specific="*"){
+        $_db = new DatabaseHelper();
+        $table = $instance::$table;
+        $_db->setSql("SELECT $specific FROM $table WHERE $foreignKey = ?");
+        $result = $_db->getRow([$id]);
+        if($result){
+            $model = new $instance($result);
+            return $model;
+        }
+        return null;
+    }
+
+    /**
+     * @param $model
+     * @param string $foreignKey
+     * @param integer $id
+     * @param null $sortBy
+     * @return array
+     * @throws \Exception
+     */
+    protected function hasMany($model,$foreignKey,$id,$sortBy=null){
+        $_db = new DatabaseHelper();
+        $collection = [];
+        $sortByItem = "";
+        if(isset($sortBy)) {
+            $sortByItem .= "ORDER BY " . $sortBy;
+        }
+        $table = $model::$table;
+        $_db->setSql("SELECT * FROM $table WHERE $foreignKey = ? $sortByItem");
+        $result = $_db->getRows([$id]);
+        if($result){
+            for($i=0;$i<count($result);$i++){
+                $object = new $model($result[$i]);
+                $collection[] = $object;
+            }
+        }
+        return $collection;
+    }
+
+    public static function all(){
+        $calledClass = get_called_class();
+        $table = get_object_vars(new $calledClass)['table'];
+        $databaseHelper = new DatabaseHelper();
+        $deleted = (self::$withDeleted === true)? "  deleted_at IS NOT NULL" : " deleted_at IS NULL";
+        $databaseHelper->setSql("SELECT * FROM ".$table." WHERE ".$deleted);
+        $results = $databaseHelper->getRows();
+        self::$withDeleted = false;
+        $collection = [];
+        if($results){
+            foreach($results as $item){
+                $collection[] = new $calledClass($item);
+            }
+        }
+        return $collection;
+    }
 }

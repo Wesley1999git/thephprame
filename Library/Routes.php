@@ -118,7 +118,7 @@ class Routes{
                     $routeSplit = explode("/",$route);
                     $countRouteSplit = count($routeSplit);
                     $params[0] = self::createRequestObject();
-                    for($i=0;$i<$countRouteSplit;$i++){
+                    for($i=1;$i<$countRouteSplit;$i++){
                         if(strpos($linkedRouteSplit[$i],"{") !== false){
                             $params[trim(trim($linkedRouteSplit[$i],"{"),"}")] = $routeSplit[$i];
                         }
@@ -134,7 +134,7 @@ class Routes{
                     $routeSplit = explode("/",$route);
                     $countRouteSplit = count($routeSplit);
                     $params[0] = self::createRequestObject();
-                    for($i=0;$i<$countRouteSplit;$i++){
+                    for($i=1;$i<$countRouteSplit;$i++){
                         if(strpos($linkedRouteSplit[$i],"{") !== false){
                             $params[trim(trim($linkedRouteSplit[$i],"{"),"}")] = $routeSplit[$i];
                         }
