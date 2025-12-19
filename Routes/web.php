@@ -1,4 +1,4 @@
 <?php
 
 
-Library\Routes::get("framework/public","HomeController@index");
+Library\Routes::get("","HomeController@index");

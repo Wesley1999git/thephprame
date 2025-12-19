@@ -1,6 +1,7 @@
 <?php
 namespace Library;
 use App\Exceptions\PageNotFound;
+use App\Controllers;
 
 class Routes{
 
@@ -14,8 +15,8 @@ class Routes{
         self::$routes["PUT"] = [];
         self::$routes["DELETE"] = [];
 
-        require_once (getRootFolder()."\\routes\\web.php");
-        require_once (getRootFolder()."\\routes\\api.php");
+        require_once (getRootFolder()."//Routes//web.php");
+        require_once (getRootFolder()."//Routes//api.php");
 
     }
 
@@ -104,13 +105,12 @@ class Routes{
         $linkedRoute = self::getLinkedRoute($route,$httpMethod);
         if($linkedRoute){
             if($linkedRoute['middleware']){
-                call_user_func_array("App\\Middleware\\".$linkedRoute['middleware']."::handle",[self::createRequestObject()]);
+                call_user_func_array("App//Middleware//".$linkedRoute['middleware']."::handle",[self::createRequestObject()]);
             }
             if(is_string($linkedRoute['method'])){
                 $methodSplit = explode('@',$linkedRoute['method']);
-                $controller = "App\\Controllers\\".$methodSplit[0];
+                $controller = "App//Controllers//".$methodSplit[0];
                 $method = $methodSplit[1];
-
                 $instance = new $controller();
                 if(strpos($linkedRoute['url'],'{') !== false){
                     $params = [];

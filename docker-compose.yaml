@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: framework # Replace 'framework' with your desired container name
+    working_dir: /var/www/html
+    ports:
+      - "8080:80"
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+    restart: unless-stopped
+    
