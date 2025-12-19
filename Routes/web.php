@@ -1,4 +1,5 @@
 <?php
+use App\Controllers\HomeController;
+use Library\Routes;
 
-
-Library\Routes::get("","HomeController@index");
+Routes::get("", HomeController::class, "index");

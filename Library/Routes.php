@@ -20,64 +20,39 @@ class Routes{
 
     }
 
-    public static function get($url,$method,$middleware = null){
+    public static function get($url, $controller,$method,$middleware = null){
         if(self::routeAlreadyExists($url,"GET")){
             self::removeAndRearrangeRouteArray($url,"GET");
         }
-
-        if(is_string($method)) {
-            self::$routes['GET'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }else{
-            self::$routes['GET'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }
+        self::$routes['GET'][] = ['url' => $url, 'controller' => $controller, 'method' => $method, 'middleware' => $middleware];
     }
 
-    public static function post($url,$method,$middleware = null){
+    public static function post($url,$controller,$method,$middleware = null){
         if(self::routeAlreadyExists($url,"POST")){
             self::removeAndRearrangeRouteArray($url,"POST");
         }
-
-        if(is_string($method)) {
-            self::$routes['POST'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }else{
-            self::$routes['POST'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }
+        self::$routes['POST'][] = ['url' => $url, 'controller' => $controller, 'method' => $method, 'middleware' => $middleware];
     }
 
-    public static function patch($url,$method,$middleware = null){
+    public static function patch($url,$controller,$method,$middleware = null){
         if(self::routeAlreadyExists($url,"PATCH")){
             self::removeAndRearrangeRouteArray($url,"PATCH");
         }
-
-        if(is_string($method)) {
-            self::$routes['PATCH'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }else{
-            self::$routes['PATCH'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }
+        self::$routes['PATCH'][] = ['url' => $url, 'controller' => $controller, 'method' => $method, 'middleware' => $middleware];
     }
 
-    public static function put($url,$method,$middleware = null){
+    public static function put($url,$controller,$method,$middleware = null){
         if(self::routeAlreadyExists($url,"PUT")){
             self::removeAndRearrangeRouteArray($url,"PUT");
         }
-
-        if(is_string($method)) {
-            self::$routes['PUT'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }else{
-            self::$routes['PUT'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }
+        self::$routes['PUT'][] = ['url' => $url, 'controller' => $controller, 'method' => $method, 'middleware' => $middleware];
     }
 
-    public static function delete($url,$method,$middleware = null){
+    public static function delete($url,$controller,$method,$middleware = null){
         if(self::routeAlreadyExists($url,"DELETE")){
             self::removeAndRearrangeRouteArray($url,"DELETE");
         }
-
-        if(is_string($method)) {
-            self::$routes['DELETE'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }else{
-            self::$routes['DELETE'][] = ['url' => $url, 'method' => $method, 'middleware' => $middleware];
-        }
+        self::$routes['DELETE'][] = ['url' => $url, 'controller' => $controller, 'method' => $method, 'middleware' => $middleware];
     }
 
     private static function routeAlreadyExists($route,$method){
@@ -108,9 +83,8 @@ class Routes{
                 call_user_func_array("App//Middleware//".$linkedRoute['middleware']."::handle",[self::createRequestObject()]);
             }
             if(is_string($linkedRoute['method'])){
-                $methodSplit = explode('@',$linkedRoute['method']);
-                $controller = "App//Controllers//".$methodSplit[0];
-                $method = $methodSplit[1];
+                $controller = $linkedRoute['controller'];
+                $method = $linkedRoute['method'];
                 $instance = new $controller();
                 if(strpos($linkedRoute['url'],'{') !== false){
                     $params = [];
