@@ -8,6 +8,7 @@ class Request{
     public $httpMethod;
     public $params;
     public $headers;
+    public $cookies;
 
     public function __construct($url,$httpMethod,$params,$headers,$cookies,$files) {
         $this->url = $url;

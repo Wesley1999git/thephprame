@@ -33,7 +33,7 @@ function asset($name){
 function view($view,$params = []){
     \Library\Cookies::setQueuedCookies();
     extract($params);
-    $location = getRootFolder()."\\Views\\".implode("\\",explode(".",$view)).".php";
+    $location = getRootFolder()."//Views//".implode("//",explode(".",$view)).".php";
     if(file_exists($location)){
         include_once ($location);
     }else{
@@ -43,20 +43,23 @@ function view($view,$params = []){
 
 // Register autoload
 spl_autoload_register(function($class){
-    if(file_exists(getRootFolder().'\\'.$class.".php")){
-        require_once getRootFolder().'\\'.$class.".php";
+    $class = str_replace("\\","//",$class);
+    if(file_exists(getRootFolder().'//'.$class.".php")){
+        require_once getRootFolder().'//'.$class.".php";
     }
 });
 
-if(file_exists(getRootFolder().'\\vendor\\autoload.php')){
-    require_once getRootFolder().'\\vendor\\autoload.php';
+if(file_exists(getRootFolder().'//vendor//autoload.php')){
+    require_once getRootFolder().'//vendor//autoload.php';
 }
 
-\Dotenv\Dotenv::create(__DIR__)->load();
+if(file_exists(getRootFolder().'//.env')){
+    \Dotenv\Dotenv::createImmutable(__DIR__)->load();
+}
 
 
-require_once (getRootFolder()."\\Config\\app.php");
-require_once (getRootFolder()."\\Config\\database.php");
+require_once (getRootFolder()."//Config//app.php");
+require_once (getRootFolder()."//Config//database.php");
 
 
 
@@ -65,11 +68,10 @@ $requestUri = $_SERVER["REQUEST_URI"];
 
 \Library\Routes::createRequestObject();
 
-\Library\Session::createNewSessionIfNoneExists();
-\Library\Session::saveSession();
+\Library\SessionFactory::createSessionDriver();
 
-library\Routes::loadRoutes();
-$route = library\Routes::getRoute(trim($requestUri, "/"), $_SERVER['REQUEST_METHOD']);
+\Library\Routes::loadRoutes();
+$route = \Library\Routes::getRoute(trim($requestUri, "/"), $_SERVER['REQUEST_METHOD']);
 
 
 
