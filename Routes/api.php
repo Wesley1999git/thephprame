@@ -1,3 +1,3 @@
 <?php
-
-// \Library\Routes::post("framework/public/api","HomeController@index","ApiAuthentication");
+use ThePHPrame\Core\Routes;
+// Routes::post("framework/public/api","HomeController@index","ApiAuthentication");

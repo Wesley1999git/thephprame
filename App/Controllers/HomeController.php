@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Controllers;
-use Library\Controller;
-use Library\Request;
+
+use ThePHPrame\Core\Library\Controller;
+use ThePHPrame\Core\Library\Request;
 
 class HomeController extends Controller {
 

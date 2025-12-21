@@ -1,7 +1,8 @@
 {
-
     "require": {
         "vlucas/phpdotenv": "^5.6.2",
-        "ramsey/uuid": "^4.9.2"
+        "ramsey/uuid": "^4.9.2",
+        "thephprame/thephprame-core": "1.0.0",
+        "thephprame/thephprame-storage": "1.0.0"
     }
 }
