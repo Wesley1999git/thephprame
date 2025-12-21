@@ -1,5 +1,9 @@
 <?php
 
+use ThePHPrame\Core\Library\Cookies;
+use ThePHPrame\Core\Library\Response;
+use ThePHPrame\Core\Library\Routes;
+
 function exceptionHandler($exception){
 
     if(method_exists($exception,"handle")){
@@ -17,13 +21,10 @@ set_exception_handler('exceptionHandler');
 define("SITE_ROOT",$_SERVER["HTTP_HOST"]);
 define("ENVIRONMENT","dev");
 
-function getRootFolder(){
-    $rootFolderName = dirname(__FILE__);
-    return $rootFolderName;
-}
+define("ROOT_FOLDER",dirname(__FILE__));    
 
 function response(){
-    return new \Library\Response();
+    return new Response();
 }
 
 function asset($name){
@@ -31,47 +32,44 @@ function asset($name){
 }
 
 function view($view,$params = []){
-    \Library\Cookies::setQueuedCookies();
+    Cookies::setQueuedCookies();
     extract($params);
-    $location = getRootFolder()."//Views//".implode("//",explode(".",$view)).".php";
+    $location = ROOT_FOLDER."//Views//".implode("//",explode(".",$view)).".php";
     if(file_exists($location)){
         include_once ($location);
     }else{
-        throw new \App\Exceptions\PageNotFound();
+        throw new \ThePHPrame\Core\Exceptions\PageNotFound();
     }
 }
 
 // Register autoload
 spl_autoload_register(function($class){
     $class = str_replace("\\","//",$class);
-    if(file_exists(getRootFolder().'//'.$class.".php")){
-        require_once getRootFolder().'//'.$class.".php";
+    if(file_exists(ROOT_FOLDER.'//'.$class.".php")){
+        require_once ROOT_FOLDER.'//'.$class.".php";
     }
 });
 
-if(file_exists(getRootFolder().'//vendor//autoload.php')){
-    require_once getRootFolder().'//vendor//autoload.php';
+if(file_exists(ROOT_FOLDER.'//vendor//autoload.php')){
+    require_once ROOT_FOLDER.'//vendor//autoload.php';
 }
 
-if(file_exists(getRootFolder().'//.env')){
+if(file_exists(ROOT_FOLDER.'//.env')){
     \Dotenv\Dotenv::createImmutable(__DIR__)->load();
 }
 
 
-require_once (getRootFolder()."//Config//app.php");
-require_once (getRootFolder()."//Config//database.php");
-
+require_once (ROOT_FOLDER."//Config//app.php");
+require_once (ROOT_FOLDER."//Config//database.php");
 
 
 // Get current url
 $requestUri = $_SERVER["REQUEST_URI"];
 
-\Library\Routes::createRequestObject();
+Routes::createRequestObject();
 
-\Library\SessionFactory::createSessionDriver();
-
-\Library\Routes::loadRoutes();
-$route = \Library\Routes::getRoute(trim($requestUri, "/"), $_SERVER['REQUEST_METHOD']);
+Routes::loadRoutes();
+$route = Routes::getRoute(trim($requestUri, "/"), $_SERVER['REQUEST_METHOD']);
 
 
 

@@ -4,12 +4,14 @@ WORKDIR /var/www/html
 
 # Copy composer files
 COPY ./composer.* ./
+COPY ./local-packages ./local-packages
 
 # Install system dependencies
 
 RUN curl -s https://getcomposer.org/installer | php
 
 # Install compose packages
+RUN php composer.phar dump-autoload
 RUN php composer.phar install
 
 # Run application
