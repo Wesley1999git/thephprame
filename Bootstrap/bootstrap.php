@@ -1,8 +1,8 @@
 <?php
 
 use ThePHPrame\Core\Library\Cookies;
-use ThePHPrame\Core\Library\Response;
-use ThePHPrame\Core\Library\Routes;
+use ThePHPrame\Router\Response;
+use ThePHPrame\Router\Routes;
 
 function exceptionHandler($exception){
 
@@ -21,7 +21,7 @@ set_exception_handler('exceptionHandler');
 define("SITE_ROOT",$_SERVER["HTTP_HOST"]);
 define("ENVIRONMENT","dev");
 
-define("ROOT_FOLDER",dirname(__FILE__));    
+define("ROOT_FOLDER",dirname(__DIR__));    
 
 function response(){
     return new Response();
@@ -55,10 +55,11 @@ if(file_exists(ROOT_FOLDER.'//vendor//autoload.php')){
 }
 
 if(file_exists(ROOT_FOLDER.'//.env')){
-    \Dotenv\Dotenv::createImmutable(__DIR__)->load();
+    \Dotenv\Dotenv::createImmutable(ROOT_FOLDER)->load();
 }
 
 
+require_once (ROOT_FOLDER."//Bootstrap//container.php");
 require_once (ROOT_FOLDER."//Config//app.php");
 require_once (ROOT_FOLDER."//Config//database.php");
 
@@ -66,10 +67,8 @@ require_once (ROOT_FOLDER."//Config//database.php");
 // Get current url
 $requestUri = $_SERVER["REQUEST_URI"];
 
-Routes::createRequestObject();
-
-Routes::loadRoutes();
-$route = Routes::getRoute(trim($requestUri, "/"), $_SERVER['REQUEST_METHOD']);
+$router = new Routes($container);
+$router->dispatch(trim($requestUri, "/"), $_SERVER['REQUEST_METHOD']);
 
 
 

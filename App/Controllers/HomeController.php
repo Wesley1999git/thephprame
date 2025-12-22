@@ -2,16 +2,17 @@
 
 namespace App\Controllers;
 
+use App\Services\ExampleService;
 use ThePHPrame\Core\Library\Controller;
-use ThePHPrame\Core\Library\Request;
+use ThePHPrame\Router\Request;
 
 class HomeController extends Controller {
 
+    public function __construct(private ExampleService $exampleService){}
+
     public function index(Request $request){
-
-
-        echo "empty framework";
-
+        echo $this->exampleService->exampleMethod();
+        echo "Empty framework";
     }
 
 }

@@ -4,7 +4,6 @@ WORKDIR /var/www/html
 
 # Copy composer files
 COPY ./composer.* ./
-COPY ./local-packages ./local-packages
 
 # Install system dependencies
 
