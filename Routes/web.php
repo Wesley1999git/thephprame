@@ -1,5 +1,5 @@
 <?php
 use App\Controllers\HomeController;
-use ThePHPrame\Core\Library\Routes;
+use ThePHPrame\Router\Routes;
 
 Routes::get("", HomeController::class, "index");
